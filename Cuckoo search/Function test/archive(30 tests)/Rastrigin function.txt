@@ -1,0 +1,43 @@
+30 tests for Rastrigin function (30 dimensions) starts
+Number of nests: 200
+Step: [1e-06, 0.01]
+Lambda: [0.1, 1.99]
+Abandon probability: 0.25
+Iterations: 3000
+Test #1 result: 7.61474e-10
+Test #2 result: 0.994968
+Test #3 result: 5.79689e-10
+Test #4 result: 0.994959
+Test #5 result: 0.994959
+Test #6 result: 4.99256e-10
+Test #7 result: 6.36817e-10
+Test #8 result: 0.99497
+Test #9 result: 6.20673e-10
+Test #10 result: 5.49107e-10
+Test #11 result: 1.98992
+Test #12 result: 5.532e-10
+Test #13 result: 0.994959
+Test #14 result: 9.26505e-05
+Test #15 result: 0.00181234
+Test #16 result: 8.57142e-10
+Test #17 result: 0.996312
+Test #18 result: 7.56643e-10
+Test #19 result: 1.01119e-09
+Test #20 result: 0.99496
+Test #21 result: 4.66855e-10
+Test #22 result: 0.994959
+Test #23 result: 6.76721e-10
+Test #24 result: 1.98992
+Test #25 result: 1.5055e-09
+Test #26 result: 2.14188e-08
+Test #27 result: 4.7981e-09
+Test #28 result: 0.994959
+Test #29 result: 0.994959
+Test #30 result: 1.98992
+	Test time: 484 seconds
+	Worst result: 1.98992
+	Best result: 4.66855e-10
+	Average result: 0.530754
+	Standard deviation: 0.677992
+		*********************
+

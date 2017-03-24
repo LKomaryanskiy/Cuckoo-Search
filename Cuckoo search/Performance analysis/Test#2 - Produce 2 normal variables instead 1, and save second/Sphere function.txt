@@ -1,0 +1,23 @@
+10 tests for Sphere function (50 dimensions) starts
+Number of nests: 200
+Step: [1e-06, 0.01]
+Lambda: [0.1, 1.99]
+Abandon probability: 0.25
+Iterations: 3000
+Test #1 result: 3.35995e-13
+Test #2 result: 4.168e-13
+Test #3 result: 5.55069e-13
+Test #4 result: 3.42539e-13
+Test #5 result: 9.71191e-13
+Test #6 result: 9.95006e-13
+Test #7 result: 4.43756e-13
+Test #8 result: 7.72629e-13
+Test #9 result: 3.53915e-13
+Test #10 result: 3.34298e-13
+	Test time: 115 seconds
+	Worst result: 9.95006e-13
+	Best result: 3.34298e-13
+	Average result: 5.5212e-13
+	Standard deviation: 2.64117e-13
+		*********************
+

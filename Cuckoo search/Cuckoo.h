@@ -1,35 +1,46 @@
+/*
+	Description:
+		This class gets nest (solution) and make flight via Levy Flights.
+*/
+
+
 #ifndef CUCKOO
 #define CUCKOO
 
 #include "LevyFlight.h"
 #include "FunctionHelper.h"
+#include "Nest.h"
 
 #include <valarray>
-#include <exception>
-#include <algorithm>
+#include <vector>
+
 
 class Cuckoo
 {
 public:
-	Cuckoo(ObjectiveFunction func, double lambda = 0.0, std::valarray<double> start_location = { 0.0 }, std::valarray<double> alpha = { 1.0 }) :
-		m_function(func), m_lambda(lambda), m_solutions(start_location), m_alpha(alpha) {};
+	Cuckoo(ObjectiveFunction func) :
+		m_function(func) {};
+	virtual Nest MakeFlight(const Nest& nest);
+	virtual Nest MakeFlight(const Nest& nest, Bounds& bounds);
+	virtual Nest MakeFlight(const Nest& nest, std::vector<Bounds>& bounds);
 
-	double MakeFlight(double lambda, std::valarray<double> alpha);
-	double MakeFlight(double lambda);
-	double MakeFlight();
+	inline ObjectiveFunction GetFunction() const { return m_function; };
+	inline void SetFunction(ObjectiveFunction func) { m_function = func; };
+	
+protected:
+	ObjectiveFunction m_function;
 
-	double GetFitness() const { return m_fitness; };
-	std::valarray<double> GetSolutions() const { return m_solutions; };
+	Egg GetNewSolution(const Nest& nest);
+};
 
-	void SetLambda(double lambda);
-	void SetAlpha(std::valarray<double> alpha);
-
-private:
-	std::valarray<double>	m_solutions;
-	ObjectiveFunction		m_function;
-	double					m_fitness;
-	double					m_lambda;
-	std::valarray<double>	m_alpha;
+class LazyCuckoo : public Cuckoo
+{
+public:
+	LazyCuckoo(ObjectiveFunction func) :
+		Cuckoo(func) {};
+	virtual Nest MakeFlight(const Nest& nest);
+	virtual Nest MakeFlight(const Nest& nest, Bounds& bounds);
+	virtual Nest MakeFlight(const Nest& nest, std::vector<Bounds>& bounds);
 };
 
 #endif // !CUCKOO

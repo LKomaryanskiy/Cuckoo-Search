@@ -1,37 +1,90 @@
 #include "Cuckoo.h"
 
-double Cuckoo::MakeFlight(double lambda, std::valarray<double> alpha)
+//Standard fly
+Nest Cuckoo::MakeFlight(const Nest& nest)
 {
-	SetLambda(lambda);
-	SetAlpha(alpha);
-
-	return MakeFlight();
+	Egg new_solution = GetNewSolution(nest);
+	return Nest(m_function, new_solution, nest.GetLambda());
 };
 
-double Cuckoo::MakeFlight(double lambda)
+	//** THE BEST RESULT **//
+/*	Make fly, divide this path on 2 equal path and check 
+	3 points (start position, middle and end point), where solution is better	*/
+/*Nest Cuckoo::MakeFlight(const Nest& nest)
 {
-	SetLambda(lambda);
+	Egg new_solution = GetNewSolution(nest);
+	Egg curr_best = new_solution;
+	Egg step = (new_solution - nest.GetSolutions()) / 2.0;
+	//#pragma omp parallel for
+	for (int i = 0; i < 1; ++i)
+	{
+		new_solution -= 2.0 * step;
+		if (m_function(new_solution) < m_function(curr_best))
+		{
+			curr_best = new_solution;
+		}
+	}
 
-	return MakeFlight();
+	return Nest(m_function, curr_best, nest.GetLambda());
+};*/
+
+/*Nest Cuckoo::MakeFlight(const Nest& nest)
+{
+	Egg curr_best = GetNewSolution(nest);
+	double best_value = m_function(curr_best);
+	for (int i = 1; i < 10; ++i)
+	{
+		Egg new_solution = GetNewSolution(nest);
+		if (m_function(new_solution) <= best_value)
+		{
+			best_value = m_function(new_solution);
+			curr_best = new_solution;
+		}
+	}
+};*/
+
+Nest Cuckoo::MakeFlight(const Nest& nest, Bounds& bounds)
+{
+	Egg new_solution = GetNewSolution(nest);
+	return Nest(m_function, bounds, new_solution, nest.GetLambda());
 };
 
-double Cuckoo::MakeFlight()
+Nest Cuckoo::MakeFlight(const Nest& nest, std::vector<Bounds>& bounds)
 {
-	m_solutions += m_alpha * LevyFlight::GetValue(m_lambda, m_solutions.size());
-	m_fitness = m_function(m_solutions);
-	return m_fitness;
+	Egg new_solution = GetNewSolution(nest);
+	return Nest(m_function, bounds, new_solution, nest.GetLambda());
 };
 
-void Cuckoo::SetLambda(double lambda)
+Egg Cuckoo::GetNewSolution(const Nest& nest)
 {
-	if ((lambda < 0.0) || (lambda > 3.0))
-		throw std::exception("Lambda must be in range [0, 3]\n");
-	m_lambda = lambda;
+	std::valarray<double> old_solution = nest.GetSolutions();
+	return old_solution + nest.GetAlpha() * LevyFlight::GetValue(nest.GetLambda(), old_solution.size());
 };
 
-void Cuckoo::SetAlpha(std::valarray<double> alpha)
+Nest LazyCuckoo::MakeFlight(const Nest &nest)
 {
-	if (std::find_if(std::begin(alpha), std::end(alpha), [](double elem) {return (elem > 0.0); }) != std::end(alpha))
-		throw std::exception("Alpha must be more than 0\n");
-	m_alpha = alpha;
+	Egg new_solution = GetNewSolution(nest);
+	Egg curr_best = new_solution;
+	Egg step = (new_solution - nest.GetSolutions()) / 2.0;
+	//#pragma omp parallel for
+	for (int i = 0; i < 2; ++i)
+	{
+		new_solution -= step;
+		if (m_function(new_solution) < m_function(curr_best))
+		{
+			curr_best = new_solution;
+		}
+	}
+
+	return Nest(m_function, curr_best, nest.GetLambda());
+};
+
+Nest LazyCuckoo::MakeFlight(const Nest & nest, Bounds & bounds)
+{
+	return Nest();
+};
+
+Nest LazyCuckoo::MakeFlight(const Nest & nest, std::vector<Bounds>& bounds)
+{
+	return Nest();
 };

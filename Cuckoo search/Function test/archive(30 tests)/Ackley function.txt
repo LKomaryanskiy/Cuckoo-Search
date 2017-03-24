@@ -1,0 +1,43 @@
+30 tests for Ackley function (20 dimensions) starts
+Number of nests: 200
+Step: [1e-06, 0.01]
+Lambda: [0.1, 1.99]
+Abandon probability: 0.25
+Iterations: 3000
+Test #1 result: 8.24572e-07
+Test #2 result: 8.15207e-07
+Test #3 result: 9.04995e-07
+Test #4 result: 8.35951e-07
+Test #5 result: 6.62513e-07
+Test #6 result: 8.81635e-07
+Test #7 result: 9.01027e-07
+Test #8 result: 7.46546e-07
+Test #9 result: 8.08014e-07
+Test #10 result: 7.99334e-07
+Test #11 result: 9.85442e-07
+Test #12 result: 7.40757e-07
+Test #13 result: 9.61136e-07
+Test #14 result: 7.04442e-07
+Test #15 result: 7.30206e-07
+Test #16 result: 7.20355e-07
+Test #17 result: 7.5032e-07
+Test #18 result: 8.30127e-07
+Test #19 result: 1.02462e-06
+Test #20 result: 8.34907e-07
+Test #21 result: 9.60193e-07
+Test #22 result: 8.82779e-07
+Test #23 result: 8.86133e-07
+Test #24 result: 9.42132e-07
+Test #25 result: 7.74204e-07
+Test #26 result: 7.89627e-07
+Test #27 result: 8.21382e-07
+Test #28 result: 9.9762e-07
+Test #29 result: 9.98174e-07
+Test #30 result: 8.13303e-07
+	Test time: 335 seconds
+	Worst result: 1.02462e-06
+	Best result: 6.62513e-07
+	Average result: 8.44255e-07
+	Standard deviation: 9.68856e-08
+		*********************
+

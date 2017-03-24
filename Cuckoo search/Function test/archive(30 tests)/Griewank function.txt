@@ -1,0 +1,43 @@
+30 tests for Griewank function (50 dimensions) starts
+Number of nests: 200
+Step: [1e-06, 0.01]
+Lambda: [0.1, 1.99]
+Abandon probability: 0.25
+Iterations: 3000
+Test #1 result: 0.132045
+Test #2 result: 0.0830305
+Test #3 result: 0.049015
+Test #4 result: 0.0123161
+Test #5 result: 0.0810309
+Test #6 result: 0.00986468
+Test #7 result: 0.0971053
+Test #8 result: 0.031957
+Test #9 result: 0.0735882
+Test #10 result: 0.0953465
+Test #11 result: 3.90842e-09
+Test #12 result: 0.112404
+Test #13 result: 0.0245733
+Test #14 result: 0.0416313
+Test #15 result: 0.0123161
+Test #16 result: 0.0897216
+Test #17 result: 0.049015
+Test #18 result: 0.0416313
+Test #19 result: 0.049015
+Test #20 result: 0.0245733
+Test #21 result: 0.121678
+Test #22 result: 0.0319571
+Test #23 result: 0.0416312
+Test #24 result: 0.0418217
+Test #25 result: 0.0123161
+Test #26 result: 0.031957
+Test #27 result: 0.0245733
+Test #28 result: 3.03456e-07
+Test #29 result: 5.7643e-07
+Test #30 result: 0.0245733
+	Test time: 766 seconds
+	Worst result: 0.132045
+	Best result: 3.90842e-09
+	Average result: 0.048023
+	Standard deviation: 0.0377483
+		*********************
+

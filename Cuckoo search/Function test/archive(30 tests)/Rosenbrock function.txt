@@ -1,0 +1,43 @@
+30 tests for Rosenbrock function (30 dimensions) starts
+Number of nests: 200
+Step: [1e-06, 0.01]
+Lambda: [0.1, 1.99]
+Abandon probability: 0.25
+Iterations: 3000
+Test #1 result: 20.8094
+Test #2 result: 23.0933
+Test #3 result: 82.9069
+Test #4 result: 13.8853
+Test #5 result: 25.6692
+Test #6 result: 25.6467
+Test #7 result: 134.017
+Test #8 result: 75.4296
+Test #9 result: 26.7149
+Test #10 result: 26.2711
+Test #11 result: 82.2909
+Test #12 result: 24.1268
+Test #13 result: 75.6654
+Test #14 result: 24.8477
+Test #15 result: 21.1588
+Test #16 result: 67.7176
+Test #17 result: 25.6364
+Test #18 result: 24.7393
+Test #19 result: 20.9347
+Test #20 result: 79.6485
+Test #21 result: 25.7526
+Test #22 result: 25.9212
+Test #23 result: 71.1171
+Test #24 result: 23.9213
+Test #25 result: 25.5031
+Test #26 result: 24.7897
+Test #27 result: 23.8672
+Test #28 result: 25.0953
+Test #29 result: 21.971
+Test #30 result: 25.6393
+	Test time: 459 seconds
+	Worst result: 134.017
+	Best result: 13.8853
+	Average result: 39.8262
+	Standard deviation: 28.8697
+		*********************
+
