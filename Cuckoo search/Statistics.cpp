@@ -101,7 +101,7 @@ void Statistics::CalculateResultStatistics()
 
 void Statistics::CalculateSolutionStatistics()
 {
-	unsigned int number_of_tests = m_info.result_statistics.all_results.size();
+	unsigned int number_of_tests = static_cast<unsigned int>(m_info.result_statistics.all_results.size());
 	m_info.solution_statistics.average_fitness_dynamics = m_info.solution_statistics.fitness_dynamics.sum() / double(number_of_tests);
 	m_info.solution_statistics.average_solution_dynamics = m_info.solution_statistics.solution_dynamics.sum() /
 		std::valarray<double>(double(number_of_tests), m_info.cuckoo_info.iterations);
@@ -158,7 +158,7 @@ void Statistics::PrintLog()
 		std::string file_path = m_solutions_log_path + m_info.function_name + "\\";
 		bool is_lazy = m_cs.IsLazyCuckoo();
 
-		for (int i = 0; i < m_info.number_of_tests; ++i)
+		for (unsigned int i = 0; i < m_info.number_of_tests; ++i)
 		{
 			std::string full_file_path = file_path + "#" + std::to_string(i + 1);
 			if (is_lazy)
@@ -170,11 +170,11 @@ void Statistics::PrintLog()
 				full_file_path += "TestLog.txt";
 			}
 			std::ofstream o_file(full_file_path);
-			for (int j = 0; j < m_info.cuckoo_info.iterations; ++j)
+			for (unsigned int j = 0; j < m_info.cuckoo_info.iterations; ++j)
 			{
 				o_file << std::fixed;
 				o_file << "#" << (j + 1) << " : Function value: " << std::setprecision(14) << m_info.solution_statistics.fitness_dynamics[i][j];
-				for (int k = 0; k < m_cs.GetObjectiveFunction().GetNumberOfDimensions(); ++k)
+				for (unsigned int k = 0; k < m_cs.GetObjectiveFunction().GetNumberOfDimensions(); ++k)
 				{
 					o_file << std::setprecision(5) << m_info.solution_statistics.solution_dynamics[i][j][k] << ", ";
 				}
@@ -192,11 +192,11 @@ void Statistics::PrintLog()
 			full_file_path += "TestLog.txt";
 		}
 		std::ofstream o_file(full_file_path);
-		for (int i = 0; i < m_info.cuckoo_info.iterations; ++i)
+		for (unsigned int i = 0; i < m_info.cuckoo_info.iterations; ++i)
 		{
 			o_file << std::fixed;
 			o_file << "#" << (i + 1) << " : Function value: " << std::setprecision(14) << m_info.solution_statistics.average_fitness_dynamics[i];
-			for (int j = 0; j < m_cs.GetObjectiveFunction().GetNumberOfDimensions(); ++j)
+			for (unsigned int j = 0; j < m_cs.GetObjectiveFunction().GetNumberOfDimensions(); ++j)
 			{
 				o_file << std::setprecision(5) << m_info.solution_statistics.average_solution_dynamics[i][j] << ", ";
 			}
@@ -212,7 +212,7 @@ void Statistics::PrintDynamics()
 	{
 		std::string file_path = m_grapher_files_path + m_info.function_name + "\\";
 		bool is_lazy = m_cs.IsLazyCuckoo();
-		for (int i = 0; i < m_info.number_of_tests; ++i)
+		for (unsigned int i = 0; i < m_info.number_of_tests; ++i)
 		{
 			std::string full_file_path = file_path + "#" + std::to_string(i + 1);
 			if (is_lazy)

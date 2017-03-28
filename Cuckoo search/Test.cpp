@@ -76,7 +76,7 @@ void run_tests(CuckooSearch& cs)
 
 void test_sphere_function()
 {
-	const Bounds bounds = { -100.0, 0.0 };
+	const Bounds bounds = { -100.0, 100.0 };
 	const unsigned int dimensions = 50;
 
 	sphere_function.SetBounds(bounds);
@@ -84,6 +84,10 @@ void test_sphere_function()
 
 	CuckooSearch cs = CuckooSearch(sphere_function, AMOUNT_OF_NESTS, { MIN_STEP, MAX_STEP },
 	{ MIN_LAMBDA, MAX_LAMBDA }, ABANDON_PROBABILITY, ITERATIONS);
+	if (USE_LAZY_CUCKOO)
+	{
+		cs.UseLazyCuckoo();
+	}
 	run_tests(cs);
 };
 

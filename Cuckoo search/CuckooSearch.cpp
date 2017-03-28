@@ -75,76 +75,55 @@ void CuckooSearch::UseStandartCuckoo()
 
 std::valarray<double> CuckooSearch::GetSolution()
 {
+	srand(static_cast<unsigned int>(time(nullptr)));
+	m_current_generation = 1;
+
+	Concurrency::critical_section critical_section;
 	m_delta_step = std::pow((m_step.GetMinStep() / m_step.GetMaxStep()), 1.0 / double(m_max_generations));
 	GenerateInitialPopulation();
 	m_best_ever = m_nests[0];
-	
-	m_current_generation = 1;
-	#pragma omp parallel 
+
+	while ((m_current_generation <= m_max_generations) && m_stop_criterian())
 	{
-		while ((m_current_generation <= m_max_generations) && m_stop_criterian())
+		m_statistics_handler();
+
+		RecalculateLambdas();
+		RecalculateStep();
+
+		Concurrency::parallel_for<unsigned int>(0, m_amount_of_nests, [&](unsigned int i)
 		{
-			#pragma omp single
+			Nest new_solution = m_cuckoo->MakeFlight(m_nests[i]);
+			unsigned int random_index = rand() % m_amount_of_nests;
+			if (m_cmp_fitness(new_solution, m_nests[random_index]))
 			{
-				srand(time(nullptr));
-				m_statistics_handler();
-			}
-			#pragma omp sections
-			{
-				#pragma omp section
-				RecalculateLambdas();
-				#pragma omp section
-				RecalculateStep();
-			}
-
-			#pragma omp for
-			for (int i = 0; i < m_amount_of_nests; ++i)
-			{
-				Nest new_solution = m_cuckoo->MakeFlight(m_nests[i]);
-				unsigned int random_index = rand() % m_amount_of_nests;
-				if (m_cmp_fitness(new_solution, m_nests[random_index]))
+				critical_section.lock();
+				m_nests[random_index] = new_solution;
+				if (m_cmp_fitness(m_nests[0], m_best_ever))
 				{
-					#pragma omp critical
-					m_nests[random_index] = new_solution;
-
-					if (m_cmp_fitness(m_nests[0], m_best_ever))
-					{
-						m_best_ever = m_nests[0];
-					}
+					m_best_ever = m_nests[0];
 				}
+				critical_section.unlock();
 			}
+		});
 
-			#pragma omp single
-			{
-				RankNests();
-				AbandonNests();
-				++m_current_generation;
-			}
-
-		}
+		RankNests();
+		AbandonNests();
+		++m_current_generation;
 	}
+
 	return m_best_ever.GetSolutions();
 };
 
 void CuckooSearch::GenerateInitialPopulation()
 {
 	m_nests = std::vector<Nest>(m_amount_of_nests);
-	#pragma omp parallel
+	Concurrency::parallel_for<unsigned int>(0, m_amount_of_nests, [&](unsigned int i)
 	{
-		#pragma omp for
-		for (int i = 0; i < m_amount_of_nests; ++i)
-		{
-			m_nests[i] = Nest(m_objective_function);
-		}
-		RankNests();
-		#pragma omp sections
-		{
-			#pragma omp section
-			RecalculateLambdas();
-			#pragma omp section
-			RecalculateStep();
-		}
-	}
+		m_nests[i] = Nest(m_objective_function);
+	});
+	RankNests();
+	RecalculateLambdas();
+	RecalculateStep();
 };
 
 void CuckooSearch::AbandonNests()
@@ -153,28 +132,26 @@ void CuckooSearch::AbandonNests()
 	{
 		throw std::exception("Abandon probability must be in range [0, 1]\n");
 	}
+	unsigned int rnd_index = static_cast<unsigned int>(m_amount_of_nests - m_abandon_probability * (rand() / double(RAND_MAX + 1.0)) * m_amount_of_nests);
 
-	int rnd_index(m_amount_of_nests - m_abandon_probability * (rand() / double(RAND_MAX + 1.0)) * m_amount_of_nests);
-	#pragma omp parallel for
-	for (int i = rnd_index; i < m_amount_of_nests; ++i)
+	Concurrency::parallel_for<unsigned int>(rnd_index, m_amount_of_nests, [&](unsigned int i)
 	{
 		m_nests[i] = Nest(m_objective_function);
-	}
+	});
 };
 
 void CuckooSearch::RankNests()
 {
-	std::sort(m_nests.begin(), m_nests.end(), m_cmp_fitness);
+	Concurrency::parallel_sort<std::vector<Nest>::iterator>(m_nests.begin(), m_nests.end(), m_cmp_fitness);
 };
 
 void CuckooSearch::RecalculateStep()
 {
-	#pragma omp parallel for
-	for (int i = 0; i < m_amount_of_nests; ++i)
+	Concurrency::parallel_for<unsigned int>(0, m_amount_of_nests, [&](unsigned int i)
 	{
 		std::valarray<double> new_alpha = m_step.GetMaxStep() * std::pow(m_delta_step, double(m_current_generation));
 		m_nests[i].SetAlpha(new_alpha);
-	}
+	});
 };
 
 void CuckooSearch::RecalculateLambdas()
@@ -185,10 +162,10 @@ void CuckooSearch::RecalculateLambdas()
 		return;
 	}
 	const double delta_lambda = m_lambda.GetMaxLamda() - m_lambda.GetMinLambda();
-	#pragma omp parallel for
-	for (int i = 0; i < m_amount_of_nests; ++i)
-	{
+
+	Concurrency::parallel_for<unsigned int>(0, m_amount_of_nests, [&](unsigned int i)
+	{ 
 		double new_lambda = m_lambda.GetMaxLamda() - (double(i) * (delta_lambda)) / double(m_amount_of_nests - 1);
 		m_nests[i].SetLambda(new_lambda);
-	}
+	});
 };

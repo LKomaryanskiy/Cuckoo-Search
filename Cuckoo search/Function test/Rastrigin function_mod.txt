@@ -9,8 +9,8 @@ Test #2 result: 0
 Test #3 result: 0
 Test #4 result: 0
 Test #5 result: 0
-	Test time: 30.509 seconds
-	Avarage time for each function: 6.1018
+	Test time: 14.179 seconds
+	Avarage time for each function: 2.8358
 	Worst result: 0
 	Best result: 0
 	Average result: 0

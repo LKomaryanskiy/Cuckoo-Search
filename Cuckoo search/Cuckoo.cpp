@@ -58,7 +58,7 @@ Nest Cuckoo::MakeFlight(const Nest& nest, std::vector<Bounds>& bounds)
 Egg Cuckoo::GetNewSolution(const Nest& nest)
 {
 	std::valarray<double> old_solution = nest.GetSolutions();
-	return old_solution + nest.GetAlpha() * LevyFlight::GetValue(nest.GetLambda(), old_solution.size());
+	return old_solution + nest.GetAlpha() * LevyFlight::GetValue(nest.GetLambda(), static_cast<unsigned int>(old_solution.size()));
 };
 
 Nest LazyCuckoo::MakeFlight(const Nest &nest)
@@ -66,7 +66,6 @@ Nest LazyCuckoo::MakeFlight(const Nest &nest)
 	Egg new_solution = GetNewSolution(nest);
 	Egg curr_best = new_solution;
 	Egg step = (new_solution - nest.GetSolutions()) / 2.0;
-	//#pragma omp parallel for
 	for (int i = 0; i < 2; ++i)
 	{
 		new_solution -= step;

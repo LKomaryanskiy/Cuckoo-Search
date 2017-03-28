@@ -10,6 +10,7 @@
 #include <valarray>
 #include <map>
 #include <utility>
+#include <ppl.h>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -27,7 +28,7 @@ struct StochasticBuffer
 class LevyFlight
 {
 public:
-	static std::valarray<double> GetValue(double lambda, unsigned long int dimension = 1);
+	static std::valarray<double> GetValue(double lambda, unsigned int dimension = 1);
 protected:
 	static double GetNormalDistribution(double mue, double sigma);
 	static std::pair<double, double> BoxMullerTransform(double mue, double sigma);

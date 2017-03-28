@@ -1,7 +1,7 @@
 #include "LevyFlight.h"
 
 
-std::valarray<double> LevyFlight::GetValue(double lambda, unsigned long int dimension)
+std::valarray<double> LevyFlight::GetValue(double lambda, unsigned int dimension)
 {
 	std::valarray<double> result(dimension);
 
@@ -10,14 +10,13 @@ std::valarray<double> LevyFlight::GetValue(double lambda, unsigned long int dime
 	const double sigma_x = std::pow(((std::tgamma(1.0 + lambda) * std::sin((M_PI * lambda) / 2.0)) / divider), 1.0 / lambda);
 	const double sigma_y = 1.0;
 
-	#pragma omp parallel for schedule(dynamic)
-	for (int i = 0; i < dimension; ++i)
+	Concurrency::parallel_for<unsigned long int>(0, dimension, [&](unsigned long int i)
 	{
 		const double x = GetNormalDistribution(0.0, sigma_x);
 		const double y = GetNormalDistribution(0.0, sigma_y);
 
 		result[i] = x / std::pow(std::abs(y), 1.0 / lambda);
-	}
+	});
 
 	return result;
 };
