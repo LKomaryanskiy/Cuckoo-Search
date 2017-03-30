@@ -1,6 +1,6 @@
 # Cuckoo search algorithm
 
-This is implementation of one of global optimization algorithm [Cuckoo search](https://en.wikipedia.org/wiki/Cuckoo_search) with modifications.
+This is implementation one of global optimization algorithm [Cuckoo search](https://en.wikipedia.org/wiki/Cuckoo_search) with modifications.
 
 ### List of testing functions:
   * [Sphere function](https://www.sfu.ca/~ssurjano/spheref.html)
