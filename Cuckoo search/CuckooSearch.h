@@ -85,7 +85,6 @@ private:
 	std::valarray<double> m_max_step;
 };
 
-
 class CuckooSearch
 {
 public:
