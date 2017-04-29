@@ -152,5 +152,73 @@ protected:
 };
 
 
+class BasisCS
+{
+public:
+	BasisCS() {};
+	BasisCS(ObjectiveFunction function) {};
+
+protected:
+	int m_amount_of_nests;
+	SetOfNests m_nests;
+	Cuckoo* m_cuckoo;
+	ObjectiveFunction m_function;
+	StopCritearian m_stop_criterian;
+	CompareFitness m_cmp_fitness;
+	unsigned int m_max_generations;
+	unsigned int m_current_generation;
+
+	Lambda m_lambda;
+	Step m_step;
+	//FIX IT: Create structure which can contain probability information (min and max abandon probability)
+	double m_abandon_probability;
+};
+
+class StatisticsCS :
+	public BasisCS
+{
+	//TODO: Fill it
+};
+
+class LazyCS :
+	public StatisticsCS
+{
+	//TODO: Fill it
+};
+
+class BaseCS :
+	public LazyCS
+{
+	//TODO: Fill it
+};
+
+template <class Base>
+class ManagedLambda :
+	public virtual Base
+{
+
+};
+
+template <class Base>
+class ManagedStep :
+	public virtual Base
+{
+
+};
+
+template <class Base>
+class ManagedProbability :
+	public virtual Base
+{
+
+};
+
+template <class Base, class Lambda, class Step, class Probability>
+class ModifiedCuckooSearch :
+	virtual public Base, Lambda, Step, Probability
+{
+
+};
+
 #endif // !CUCKOO_SEARCH
 

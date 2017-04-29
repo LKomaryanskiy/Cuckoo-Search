@@ -209,7 +209,7 @@ void test()
 
 int main()
 {
-	test();
+	//test();
 	/*ackley_function.SetDimensions(20);
 	Egg solution = std::valarray<double>(0.0, 20);
 	std::cout << ackley_function(solution) << "\n";
