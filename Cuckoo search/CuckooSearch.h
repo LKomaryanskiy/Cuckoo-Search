@@ -140,15 +140,12 @@ protected:
 
 	StatisticsHandler		m_statistics_handler;
 
-
 	void GenerateInitialPopulation();
 	std::valarray<double> GetSolution();
 	void AbandonNests();
 	void RankNests();
 	void RecalculateStep();
 	void RecalculateLambdas();
-
-
 };
 
 
@@ -156,11 +153,34 @@ class BasisCS
 {
 public:
 	BasisCS() {};
-	BasisCS(ObjectiveFunction function) {};
+	BasisCS(ObjectiveFunction func, unsigned amount_of_nests = 32, Step step = 1.0, Lambda lambda = { 0.3, 1.99 }, double prob = 0.25,
+		unsigned max_generations = 10000, StopCritearian stop_crierian = []() {return true; });
+	//virtual ~BasisCS() {};
+
+	std::valarray<double> FindMax();
+	std::valarray<double> FindMin();
+	std::valarray<double> FindMax(Lambda lambda, Step step, double prob, StopCritearian stop_criterian = []() {return true; });
+	std::valarray<double> FindMin(Lambda lambda, Step step, double prob, StopCritearian stop_criterian = []() {return true; });
+
+	inline unsigned GetMaxGenerations() const { return m_max_generations; };
+	inline Lambda GetLambda() const { return m_lambda; };
+	inline Step GetStep() const { return m_step; };
+	inline double GetAbandonProbability() const { return m_abandon_probability; };
+	inline ObjectiveFunction GetObjectiveFunction() const { return m_function; };
+	inline StopCritearian GetStopCriterian() const { return m_stop_criterian; };
+	inline unsigned GetNumberOfNests() const { return m_amount_of_nests; };
+
+	inline void SetNumberOfNests(unsigned int nests) { m_amount_of_nests = nests; };
+	inline void SetStopCriterian(StopCritearian stop_criterian) { m_stop_criterian = stop_criterian; };
+	inline void SetLamda(const Lambda& lambda) { m_lambda = lambda; };
+	inline void SetStep(const Step& step) { m_step = step; };
+	inline void SetAbandonProbability(double probability) { m_abandon_probability = probability; };
+	inline void SetMaxGenerations(unsigned int generations) { m_max_generations = generations; };
 
 protected:
 	int m_amount_of_nests;
 	SetOfNests m_nests;
+	Nest m_best_ever;
 	Cuckoo* m_cuckoo;
 	ObjectiveFunction m_function;
 	StopCritearian m_stop_criterian;
@@ -172,52 +192,114 @@ protected:
 	Step m_step;
 	//FIX IT: Create structure which can contain probability information (min and max abandon probability)
 	double m_abandon_probability;
+
+	void GenerateInitialPopulation();
+	virtual std::valarray<double> GetSolution() = 0;
+	void AbandonNests();
+	void RankNests();
+
+	void RecalculateParameters();
+
+	virtual void RecalculateStep() {};
+	virtual void RecalculateLambdas() {};
+	virtual void RecalculateProbability() {};
 };
 
 class StatisticsCS :
-	public BasisCS
+	public virtual
+ BasisCS
 {
-	//TODO: Fill it
+public:
+	StatisticsCS() {};
+	StatisticsCS(ObjectiveFunction func, unsigned amount_of_nests = 32, Step step = 1.0, Lambda lambda = { 0.3, 1.99 }, double prob = 0.25,
+		unsigned max_generations = 10000, StopCritearian stop_crierian = []() {return true; });
+
+	inline double GetCurrentBestValue() const { return m_best_ever.GetFitness(); };
+	inline Nest GetCurrentBestNest() const { return m_best_ever; };
+	inline unsigned GetCurrentGeneration() const { return m_current_generation; };
+	inline void SetStatisticsHandler(StatisticsHandler* handler) { m_statistics_handler = *handler; };
+
+protected:
+	StatisticsHandler m_statistics_handler;
+	virtual std::valarray<double> GetSolution();
 };
 
 class LazyCS :
 	public StatisticsCS
 {
-	//TODO: Fill it
+public:
+	LazyCS() {};
+	LazyCS(ObjectiveFunction func, unsigned amount_of_nests = 32, Step step = 1.0, Lambda lambda = { 0.3, 1.99 }, double prob = 0.25,
+		unsigned max_generations = 10000, StopCritearian stop_crierian = []() {return true; }, bool use_lazy_cuckoo = false);
+	inline bool IsLazyCuckoo() const { return m_use_lazy_cuckoo; };
+	void UseLazyCuckoo();
+	void UseStandartCuckoo();
+
+protected:
+	bool m_use_lazy_cuckoo;
 };
 
 class BaseCS :
 	public LazyCS
 {
-	//TODO: Fill it
+public:
+	BaseCS() {};
+	BaseCS(ObjectiveFunction func, unsigned amount_of_nests = 32, Step step = 1.0, Lambda lambda = { 0.3, 1.99 }, double prob = 0.25,
+		unsigned max_generations = 10000, StopCritearian stop_crierian = []() {return true; }, bool use_lazy_cuckoo = false) :
+		LazyCS(func, amount_of_nests, step, lambda, prob, max_generations, stop_crierian, use_lazy_cuckoo) {};
 };
 
-template <class Base>
-class ManagedLambda :
-	public virtual Base
-{
-
-};
-
-template <class Base>
-class ManagedStep :
-	public virtual Base
-{
-
-};
-
-template <class Base>
-class ManagedProbability :
-	public virtual Base
-{
-
-};
-
-template <class Base, class Lambda, class Step, class Probability>
+template <class ManagedLambda, class ManagedStep, class ManagedProbability>
 class ModifiedCuckooSearch :
-	virtual public Base, Lambda, Step, Probability
+	virtual public ManagedLambda, virtual public ManagedStep, virtual public ManagedProbability
+{
+public:
+	ModifiedCuckooSearch(ObjectiveFunction func, unsigned amount_of_nests = 32, Step step = 1.0, Lambda lambda = { 0.3, 1.99 }, double prob = 0.25,
+		unsigned max_generations = 10000, StopCritearian stop_crierian = []() {return true; }, bool use_lazy_cuckoo = false) :
+		BaseCS(func, amount_of_nests, step, lambda, prob, max_generations, stop_crierian, use_lazy_cuckoo) {};
+
+	virtual void RecalculateStep() { ManagedStep::RecalculateStep(); };
+	virtual void RecalculateLambdas() { ManagedLambda::RecalculateLambdas(); };
+	virtual void RecalculateProbability() { ManagedProbability::RecalculateProbability(); };
+};
+
+
+class ModificationL1
 {
 
+};
+
+class ModificationA1
+{
+
+};
+
+class ModificationP1
+{
+
+};
+
+class ModificationLNone : 
+	public virtual BaseCS
+{
+protected:
+	virtual void RecalculateLambdas();
+};
+
+class ModificationANone :
+	public virtual BaseCS
+{
+public:
+	ModificationANone() {};
+protected:
+	virtual void RecalculateStep();
+};
+
+class ModificationPNone :
+	public virtual BaseCS
+{
+protected:
+	virtual void RecalculateProbability();
 };
 
 #endif // !CUCKOO_SEARCH

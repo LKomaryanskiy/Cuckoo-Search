@@ -214,6 +214,13 @@ int main()
 	Egg solution = std::valarray<double>(0.0, 20);
 	std::cout << ackley_function(solution) << "\n";
 	system("pause");*/
+
+	ModifiedCuckooSearch<ModificationLNone, ModificationANone, ModificationPNone> cs(rastrigin_function, AMOUNT_OF_NESTS, { MIN_STEP, MAX_STEP },
+	{ MIN_LAMBDA, MAX_LAMBDA }, ABANDON_PROBABILITY, ITERATIONS);
+	if (USE_LAZY_CUCKOO)
+	{
+		cs.UseLazyCuckoo();
+	}
 	
 	return EXIT_SUCCESS;
 }
